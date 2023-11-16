@@ -14,6 +14,12 @@ public class SecurityConfig {
 
     @Autowired
     private SecurityFilter securityFilter;
+
+    private static final String[] SWAGGER_LIST = {
+        "/swagger-ui/**",
+        "/v3/api-docs/**",
+        "/swagger-ressources/**"
+    };
     
     @Bean // esse metodo existente na sua camada original eu quero que vc sobreescreva com isso que eu coloquei aqui dentro
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -22,10 +28,12 @@ public class SecurityConfig {
         .authorizeRequests(auth -> {
             auth.requestMatchers("/candidate/").permitAll()
             .requestMatchers("/company/").permitAll()
-            .requestMatchers("/auth/company").permitAll();
+            .requestMatchers("/auth/company").permitAll()
+            .requestMatchers("/candidate/auth").permitAll()
+            .requestMatchers(SWAGGER_LIST).permitAll();
             auth.anyRequest().authenticated();
         })
-
+            
         .addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
         
         ;
